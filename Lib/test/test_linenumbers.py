@@ -10,11 +10,12 @@ import unittest
 def boom(*args, **kwargs):
     raise RuntimeError()
 
+
 def dummy(*args, **kwargs):
     pass
 
 
-class TestPEP380Operation(unittest.TestCase):
+class TestLineNumbers(unittest.TestCase):
     def expect_line(self, f, expected_relative_line, depth=1):
         """Expect an exception in f at the given line offset."""
         try:
