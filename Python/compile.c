@@ -206,6 +206,23 @@ static PyObject *__doc__;
 
 #define CAPSULE_NAME "compile.c compiler unit"
 
+static int debug;
+
+static int
+ddprintf(const char *fmt, ...)
+{
+  int r;
+  va_list va;
+
+  if (!debug)
+    return 0;
+
+  va_start(va, fmt);
+  r = vfprintf(stderr, fmt, va);
+  va_end(va);
+  return r;
+}
+
 PyObject *
 _Py_Mangle(PyObject *privateobj, PyObject *ident)
 {
@@ -1652,6 +1669,9 @@ compiler_function(struct compiler *c, stmt_ty s, int is_async)
         scope_type = COMPILER_SCOPE_FUNCTION;
     }
 
+    if (!PyUnicode_CompareWithASCIIString(name, "f"))
+        debug = 1;
+
     if (!compiler_decorators(c, decos))
         return 0;
     if (args->defaults)
@@ -1717,6 +1737,8 @@ compiler_function(struct compiler *c, stmt_ty s, int is_async)
     for (i = 0; i < asdl_seq_LEN(decos); i++) {
         ADDOP_I(c, CALL_FUNCTION, 1);
     }
+
+    debug = 0;
 
     return compiler_nameop(c, name, Store);
 }
@@ -4539,6 +4561,7 @@ assemble_emit(struct assembler *a, struct instr *i)
         arg = i->i_oparg;
         ext = arg >> 16;
     }
+    ddprintf("emit: %d %d\n", a->a_offset, i->i_lineno);
     if (i->i_lineno && !assemble_lnotab(a, i))
         return 0;
     if (a->a_offset + size >= len) {
