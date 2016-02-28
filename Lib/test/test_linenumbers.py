@@ -33,7 +33,7 @@ class TestPEP380Operation(unittest.TestCase):
                 1,
                 x=2,
                 )
-        self.expect_line(f, 3) # want 2
+        self.expect_line(f, 3) # want 1
 
         def f():
             boom \
@@ -131,6 +131,7 @@ class TestPEP380Operation(unittest.TestCase):
         self.expect_line(f, 6) # want 5
 
     # TODO getitem, getattr
+    # TODO with, for/else, try/except/else/finally
 
 
 if __name__ == '__main__':
