@@ -58,7 +58,7 @@ class TestPEP380Operation(unittest.TestCase):
                 for x in range(2)
                 if x
             ]
-        self.expect_line(f, 4, depth=2) # want 2
+        self.expect_line(f, 2, depth=2)
 
         def f():
             {
@@ -66,7 +66,7 @@ class TestPEP380Operation(unittest.TestCase):
                 for x in range(2)
                 if x
             }
-        self.expect_line(f, 4, depth=2) # want 2
+        self.expect_line(f, 2, depth=2)
 
         def f():
             {
@@ -74,7 +74,7 @@ class TestPEP380Operation(unittest.TestCase):
                 for x in range(2)
                 if x
             }
-        self.expect_line(f, 4, depth=2) # want 2
+        self.expect_line(f, 2, depth=2)
 
     def test_operators(self):
         class C:
