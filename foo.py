@@ -1,15 +1,17 @@
 def f():
-    [
-        boom()
-        for x in range(2)
-        if x
-        ]
+    class C():
+        def ff():
+            pass
+
+    boom(
+        1)
 
 import dis
 
 def boom():
     raise RuntimeError()
 
-dis.dis(f.__code__.co_consts[1])
+dis.dis(f)
+print(); dis.dis(f.__code__.co_consts[1])
 
-f()
+#f()
