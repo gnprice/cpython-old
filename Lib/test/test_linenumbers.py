@@ -15,13 +15,13 @@ def dummy(*args, **kwargs):
 
 
 class TestPEP380Operation(unittest.TestCase):
-    def expect_line(self, f, expected_relative_line):
+    def expect_line(self, f, expected_relative_line, depth=1):
         """Expect an exception in f at the given line offset."""
         try:
             f()
         except Exception:
             frames = traceback.extract_tb(sys.exc_info()[2])
-            line = frames[1][1]
+            line = frames[depth][1]
             relative_line = line - f.__code__.co_firstlineno
             self.assertEqual(relative_line, expected_relative_line)
         else:
@@ -58,7 +58,7 @@ class TestPEP380Operation(unittest.TestCase):
                 for x in range(2)
                 if x
             ]
-        self.expect_line(f, 3) # want 2
+        self.expect_line(f, 4, depth=2) # want 2
 
         def f():
             {
@@ -66,7 +66,7 @@ class TestPEP380Operation(unittest.TestCase):
                 for x in range(2)
                 if x
             }
-        self.expect_line(f, 3) # want 2
+        self.expect_line(f, 4, depth=2) # want 2
 
         def f():
             {
@@ -74,7 +74,7 @@ class TestPEP380Operation(unittest.TestCase):
                 for x in range(2)
                 if x
             }
-        self.expect_line(f, 3) # want 2
+        self.expect_line(f, 4, depth=2) # want 2
 
     def test_operators(self):
         class C:
