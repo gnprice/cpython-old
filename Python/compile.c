@@ -859,8 +859,6 @@ static void
 compiler_set_lineno(struct compiler *c, int off)
 {
     basicblock *b;
-    if (c->u->u_lineno_set)
-        return;
     c->u->u_lineno_set = 1;
     b = c->u->u_curblock;
     b->b_instr[off].i_lineno = c->u->u_lineno;
