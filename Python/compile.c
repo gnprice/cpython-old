@@ -3866,10 +3866,8 @@ compiler_visit_expr(struct compiler *c, expr_ty e)
     /* If expr e has a different line number than the last expr/stmt,
        set a new line number for the next instruction.
     */
-    if (e->lineno > c->u->u_lineno) {
-        c->u->u_lineno = e->lineno;
-        c->u->u_lineno_set = 0;
-    }
+    c->u->u_lineno = e->lineno;
+    c->u->u_lineno_set = 0;
     /* Updating the column offset is always harmless. */
     c->u->u_col_offset = e->col_offset;
     switch (e->kind) {
