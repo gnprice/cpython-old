@@ -132,7 +132,7 @@ class TestPEP380Operation(unittest.TestCase):
 
     # TODO getitem, getattr
     # TODO with, for/else, try/except/else/finally
-
+    # TODO classdef bases
 
 if __name__ == '__main__':
     unittest.main()
