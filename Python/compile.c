@@ -196,6 +196,7 @@ static int compiler_with(struct compiler *, stmt_ty, int);
 static int compiler_async_with(struct compiler *, stmt_ty, int);
 static int compiler_async_for(struct compiler *, stmt_ty);
 static int compiler_call_helper(struct compiler *c, Py_ssize_t n,
+                                expr_ty source_loc,
                                 asdl_seq *args,
                                 asdl_seq *keywords);
 static int compiler_try_except(struct compiler *, stmt_ty);
@@ -1845,7 +1846,7 @@ compiler_class(struct compiler *c, stmt_ty s)
     ADDOP_O(c, LOAD_CONST, s->v.ClassDef.name, consts);
 
     /* 5. generate the rest of the code for the call */
-    if (!compiler_call_helper(c, 2,
+    if (!compiler_call_helper(c, 2, NULL,
                               s->v.ClassDef.bases,
                               s->v.ClassDef.keywords))
         return 0;
@@ -3200,7 +3201,7 @@ static int
 compiler_call(struct compiler *c, expr_ty e)
 {
     VISIT(c, expr, e->v.Call.func);
-    return compiler_call_helper(c, 0,
+    return compiler_call_helper(c, 0, e->v.Call.func,
                                 e->v.Call.args,
                                 e->v.Call.keywords);
 }
@@ -3284,6 +3285,7 @@ compiler_formatted_value(struct compiler *c, expr_ty e)
 static int
 compiler_call_helper(struct compiler *c,
                      Py_ssize_t n, /* Args already pushed */
+                     expr_ty source_loc,
                      asdl_seq *args,
                      asdl_seq *keywords)
 {
@@ -3380,6 +3382,11 @@ compiler_call_helper(struct compiler *c,
     assert(n < 1<<8);
     assert(nkw < 1<<24);
     n |= nkw << 8;
+
+    if (source_loc) {
+        c->u->u_lineno = source_loc->lineno;
+        c->u->u_col_offset = source_loc->col_offset;
+    }
 
     switch (code) {
     case 0:

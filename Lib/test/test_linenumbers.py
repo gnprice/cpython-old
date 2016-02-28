@@ -33,7 +33,7 @@ class TestPEP380Operation(unittest.TestCase):
                 1,
                 x=2,
                 )
-        self.expect_line(f, 3) # want 1
+        self.expect_line(f, 1)
 
         def f():
             boom \
@@ -41,7 +41,7 @@ class TestPEP380Operation(unittest.TestCase):
                 1,
                 x=2,
                 )
-        self.expect_line(f, 4) # want 2
+        self.expect_line(f, 1) # want 2
 
         def f():
             dummy(
